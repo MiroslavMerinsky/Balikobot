@@ -1,0 +1,23 @@
+{
+	"name": "merinsky/balikobot",
+	"description": "Balikobot API",
+	"homepage": "https://github.com/MiroslavMerinsky/Balikobot",
+	"version": "1.0.0",
+	"license": "GPL-3.0",
+	"keywords": ["Balikobot", "Delivery service", "Shipper", "API"],
+	"authors": [
+		{
+			"name": "Miroslav Merinsky",
+			"email": "miroslav@merinsky.biz"
+		}
+	],
+	"require": {
+		"php": ">=7.0.0",
+		"ext-curl": "*",
+		"ext-json": "*"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"minimum-stability": "dev"
+}
