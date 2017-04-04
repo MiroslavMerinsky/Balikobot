@@ -22,7 +22,15 @@ $shippers = $b->getShippers();
 if ($testGetters) {
     printf("Shippers & its services\n");
     foreach ($shippers as $itemShippers) {
-        printf("%s: %s\n", $itemShippers, arrayToString($b->getServices($itemShippers)));
+        try {
+            printf("%s: %s\n", $itemShippers, arrayToString($b->getServices($itemShippers)));
+        } catch (\InvalidArgumentException $e) {
+            if ($e->getCode() == Balikobot::EXCEPTION_NOT_SUPPORTED) {
+                printf("%s: %s\n", $itemShippers, 'Not supported');
+            } else {
+                throw $e;
+            }
+        }
     }
     printf("\n\n");
 
@@ -39,19 +47,36 @@ if ($testGetters) {
     // shippers + services
     printf("Countries For Service\n");
     foreach ($shippers as $itemShippers) {
-        printf("%s: %s\n", $itemShippers, arrayToString($b->getCountriesForService($itemShippers)));
+        try {
+            printf("%s: %s\n", $itemShippers, arrayToString($b->getCountriesForService($itemShippers)));
+        } catch (\InvalidArgumentException $e) {
+            if ($e->getCode() == Balikobot::EXCEPTION_NOT_SUPPORTED) {
+                printf("%s: %s\n", $itemShippers, 'Not supported');
+            } else {
+                throw $e;
+            }
+        }
     }
     printf("\n\n");
 
     // branches
     printf("Branches\n");
     foreach ($shippers as $itemShippers) {
-        $services = $b->getServices($itemShippers);
-        foreach ($services as $servicesKey => $servicesItem) {
-            try {
-                printf("%s:%s: %s\n", $itemShippers, $servicesKey, arrayToString($b->getBranches($itemShippers, $servicesKey)));
-            } catch (\Exception $e) {
-                printf("\nException: %d: %s\n", $e->getCode(), $e->getMessage());
+        try {
+            $services = $b->getServices($itemShippers);
+
+            foreach ($services as $servicesKey => $servicesItem) {
+                try {
+                    printf("%s:%s: %s\n", $itemShippers, $servicesKey, arrayToString($b->getBranches($itemShippers, $servicesKey)));
+                } catch (\Exception $e) {
+                    printf("\nException: %d: %s\n", $e->getCode(), $e->getMessage());
+                }
+            }
+        } catch (\InvalidArgumentException $e) {
+            if ($e->getCode() == Balikobot::EXCEPTION_NOT_SUPPORTED) {
+                printf("%s: %s\n", $itemShippers, 'Not supported');
+            } else {
+                throw $e;
             }
         }
     }
@@ -60,12 +85,21 @@ if ($testGetters) {
     // zip
     printf("Zip\n");
     foreach ($shippers as $itemShippers) {
-        $services = $b->getServices($itemShippers);
-        foreach ($services as $servicesKey => $servicesItem) {
-            try {
-                printf("%s:%s: %s\n", $itemShippers, $servicesKey, arrayToString($b->getZipCodes($itemShippers, $servicesKey)));
-            } catch (\Exception $e) {
-                printf("\nException: %d: %s\n", $e->getCode(), $e->getMessage());
+        try {
+            $services = $b->getServices($itemShippers);
+
+            foreach ($services as $servicesKey => $servicesItem) {
+                try {
+                    printf("%s:%s: %s\n", $itemShippers, $servicesKey, arrayToString($b->getZipCodes($itemShippers, $servicesKey)));
+                } catch (\Exception $e) {
+                    printf("\nException: %d: %s\n", $e->getCode(), $e->getMessage());
+                }
+            }
+        } catch (\InvalidArgumentException $e) {
+            if ($e->getCode() == Balikobot::EXCEPTION_NOT_SUPPORTED) {
+                printf("%s: %s\n", $itemShippers, 'Not supported');
+            } else {
+                throw $e;
             }
         }
     }
@@ -86,7 +120,15 @@ if ($testGetters) {
     // manipulation units
     printf("Manipulation units\n");
     foreach ($shippers as $itemShippers) {
-        printf("%s: %s\n", $itemShippers, arrayToString($b->getManipulationUnits($itemShippers)));
+        try {
+            printf("%s: %s\n", $itemShippers, arrayToString($b->getManipulationUnits($itemShippers)));
+        } catch (\InvalidArgumentException $e) {
+            if ($e->getCode() == Balikobot::EXCEPTION_NOT_SUPPORTED) {
+                printf("%s: %s\n", $itemShippers, 'Not supported');
+            } else {
+                throw $e;
+            }
+        }
     }
     printf("\n\n");
 }

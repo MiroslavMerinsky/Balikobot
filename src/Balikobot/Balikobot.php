@@ -432,6 +432,7 @@ class Balikobot {
      */
     const
         EXCEPTION_INVALID_REQUEST = 400, /*< Invalid request */
+        EXCEPTION_NOT_SUPPORTED = 401, /*< Not supported */
         EXCEPTION_SERVER_ERROR = 500; /*< Unexpected response from the server */
 
 
@@ -711,6 +712,8 @@ class Balikobot {
 
         $response = $this->call(self::REQUEST_SERVICES, $shipper);
 
+        if (isset($response['status']) && ($response['status'] == 409))
+            throw new \InvalidArgumentException("The $shipper shipper is not supported.", self::EXCEPTION_NOT_SUPPORTED);
         if (!isset($response['status']) || ($response['status'] != 200)) {
             $code = isset($response['status']) ? $response['status'] : 0;
             throw new \UnexpectedValueException("Unexpected server response, code = $code.", self::EXCEPTION_SERVER_ERROR);
@@ -731,6 +734,8 @@ class Balikobot {
 
         $response = $this->call(self::REQUEST_MANIPULATIONUNITS, $shipper);
 
+        if (isset($response['status']) && ($response['status'] == 409))
+            throw new \InvalidArgumentException("The $shipper shipper is not supported.", self::EXCEPTION_NOT_SUPPORTED);
         if (!isset($response['status']) || ($response['status'] != 200)) {
             $code = isset($response['status']) ? $response['status'] : 0;
             throw new \UnexpectedValueException("Unexpected server response, code = $code.", self::EXCEPTION_SERVER_ERROR);
@@ -762,6 +767,8 @@ class Balikobot {
 
         $response = $this->call($full ? self::REQUEST_FULLBRANCHES : self::REQUEST_BRANCHES, $shipper, [], $service);
 
+        if (isset($response['status']) && ($response['status'] == 409))
+            throw new \InvalidArgumentException("The $shipper shipper is not supported.", self::EXCEPTION_NOT_SUPPORTED);
         if (!isset($response['status']) || ($response['status'] != 200)) {
             $code = isset($response['status']) ? $response['status'] : 0;
             throw new \UnexpectedValueException("Unexpected server response, code = $code.", self::EXCEPTION_SERVER_ERROR);
@@ -798,6 +805,8 @@ class Balikobot {
 
         $response = $this->call(self::REQUEST_COUNTRIES4SERVICE, $shipper);
 
+        if (isset($response['status']) && ($response['status'] == 409))
+            throw new \InvalidArgumentException("The $shipper shipper is not supported.", self::EXCEPTION_NOT_SUPPORTED);
         if (!isset($response['status']) || ($response['status'] != 200)) {
             $code = isset($response['status']) ? $response['status'] : 0;
             throw new \UnexpectedValueException("Unexpected server response, code = $code.", self::EXCEPTION_SERVER_ERROR);
@@ -830,6 +839,8 @@ class Balikobot {
 
         $response = $this->call(self::REQUEST_ZIPCODES, $shipper, [], "$service/$country");
 
+        if (isset($response['status']) && ($response['status'] == 409))
+            throw new \InvalidArgumentException("The $shipper shipper is not supported.", self::EXCEPTION_NOT_SUPPORTED);
         if (!isset($response['status']) || ($response['status'] != 200)) {
             $code = isset($response['status']) ? $response['status'] : 0;
             throw new \UnexpectedValueException("Unexpected server response, code = $code.", self::EXCEPTION_SERVER_ERROR);
@@ -1305,8 +1316,6 @@ class Balikobot {
         if (empty($request) || empty ($shipper))
             throw new \InvalidArgumentException('Invalid argument has been entered.');
 
-        //printf("\nRequest: $this->apiUrl/$shipper/$request\n");
-
         $r = curl_init();
         curl_setopt($r, CURLOPT_URL, $url ? "$this->apiUrl/$shipper/$request/$url" : "$this->apiUrl/$shipper/$request");
         curl_setopt($r, CURLOPT_RETURNTRANSFER, true);
@@ -1321,7 +1330,7 @@ class Balikobot {
         ]);
         $response = curl_exec($r);
         curl_close($r);
-        //var_dump($response);
+
         return json_decode($response, true);
     }
 
