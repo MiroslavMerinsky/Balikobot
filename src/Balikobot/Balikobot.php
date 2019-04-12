@@ -976,7 +976,7 @@ class Balikobot {
         if (empty($shipper) || !in_array($shipper, $this->getShippers()) || empty($packageId))
             throw new \InvalidArgumentException('Invalid argument has been entered.');
 
-        $response = $this->call(self::REQUEST_PACKAGE, $shipper, null, $packageId);
+        $response = $this->call(self::REQUEST_PACKAGE, $shipper, [], $packageId);
 
         if (isset($response['status']) && ($response['status'] == 404))
             throw new \UnexpectedValueException('Invalid package number.', self::EXCEPTION_INVALID_REQUEST);
